@@ -1,0 +1,5 @@
+<mat-list [class.cascadeList]="cascadeList" role="list" *ngIf="comments && comments.length > 0">
+    <div *ngFor="let comment of comments" class="commentsListElement">
+            <comment-list-element [comment]="comment"></comment-list-element>            
+    </div>    
+</mat-list>

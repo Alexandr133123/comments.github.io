@@ -1,0 +1,19 @@
+<div>
+    <div class="listElement">
+        <div class="userInfo">
+            <b>
+               {{comment.user.userName}}
+            </b>
+            {{comment.createdDate | date: 'short'}}
+         </div>
+         <div [innerHTML]="comment.commentText" class="commentText"></div>
+         <button mat-raised-button *ngIf="!showReplyForm" (click)="toggleReplyForm()">Reply</button>
+         <button mat-raised-button  *ngIf="showReplyForm" (click)="toggleReplyForm()">Cancel</button>         
+        <comment-add [headCommentId]="comment.commentId" *ngIf="showReplyForm"></comment-add>
+    </div>
+    <div *ngFor="let imageSrc of imageSrcs">
+        <img class="commentImage" [src]="imageSrc"/>
+    </div>
+</div>    
+<comments-list *ngIf="comment.answers && comment.answers.length > 0" style="margin-left: 30px;" [comments]="comment.answers" [cascadeList]="true"></comments-list>
+

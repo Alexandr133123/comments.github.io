@@ -1,0 +1,13 @@
+<h1 >Comments</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+<comment-add></comment-add>
+<div class="content">    
+    <comments-list [comments]="comments"></comments-list>
+    <mat-paginator
+        #paginator
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="paginatorEvent = $event; loadComments()"
+        aria-label="Select page">
+    </mat-paginator>
+</div>

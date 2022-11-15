@@ -1,0 +1,26 @@
+.userInfo{
+    width: 100%;
+    background: rgb(173, 171, 171);
+    background: linear-gradient(90deg, rgba(173,171,171,1) 22%, rgba(62,62,62,1) 75%);
+    padding: 10px 15px;
+    b{
+        font-size: 18px;
+    }
+}
+
+.commentText{
+    font-size: 15px;
+    padding: 10px 5px;
+}
+
+.listElement{
+    border: 1px solid black;
+}
+
+.commentImage{
+    height: auto; 
+    width: auto; 
+    max-width: 320px; 
+    max-height: 240px;
+    
+}

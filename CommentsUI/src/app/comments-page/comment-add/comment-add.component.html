@@ -1,0 +1,33 @@
+<div class="comment-add">
+    <form class="form" [formGroup]="commentFormGroup">
+        <mat-form-field class="form-field" appearance="fill">    
+            <mat-label>Email*</mat-label>
+            <input type="email" matInput  placeholder="email" formControlName="email">        
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="fill">
+            <mat-label>UserName*</mat-label>
+            <input type="text" matInput formControlName="userName">
+        </mat-form-field>
+        
+        <mat-form-field class="form-field" appearance="fill">
+            <mat-label>Home Page</mat-label>
+            <input type="url" matInput formControlName="homePage">
+        </mat-form-field>
+
+        <button mat-raised-button (click)="addTagOnSelectedText('strong')" [disabled]="commentTextInput.length > 0">Bold</button>
+        <button mat-raised-button (click)="addTagOnSelectedText('i')" [disabled]="commentTextInput.length > 0">Italic</button>
+        <button mat-raised-button (click)="addTagOnSelectedText('code')" [disabled]="commentTextInput.length > 0">Code</button>
+        <button mat-raised-button (click)="addTagOnSelectedText('a')" [disabled]="commentTextInput.length > 0">Link</button>
+
+        <mat-form-field class="form-field" appearance="fill">
+            <mat-label>Comment Text*</mat-label>
+            <textarea contenteditable #commentTextInput type="text" matInput formControlName="commentText"></textarea>
+        </mat-form-field>    
+        <input aria-multiline="true" type="file" #file (change)="setSelectedFile(file.files)" accept="image/png, image/jpeg, image/gif, text/txt">
+        <div>
+            <ngx-captcha  [config]="captchaConfig"></ngx-captcha>
+        </div>
+        <button mat-raised-button (click)="postComment()" [disabled]="isActivePostButton()">{{postButton()}}</button>
+    </form>
+</div>

@@ -18,6 +18,8 @@ export class CommentAddComponent implements OnInit {
   public comment: Comment;
   public user: User;
   public uploadedFile: File | null = null;
+  public isRequestPending: boolean = false;
+
   @Input() headCommentId: number;
   @ViewChild('commentTextInput') private commenTextInput : ElementRef;
 
@@ -36,7 +38,7 @@ export class CommentAddComponent implements OnInit {
 
   public commentFormGroup: FormGroup;
 
-  private captchaStatus: boolean;
+  private captchaStatus: boolean = false;
 
   constructor(private commentsHttpService : CommentsHttpService, 
     private commentEventService: CommentEventService, 
@@ -59,18 +61,21 @@ export class CommentAddComponent implements OnInit {
     this.captchaService.captchStatus.subscribe((status)=>{
       if (status == false) {
         this.captchaStatus = false;
+        this.toastrService.error('Captcha is invalid!', 'Error');
       } else  if (status == true) {
         this.captchaStatus = true;
+        this.toastrService.success('Captcha is valid!', 'Success');
       }
     });
   }
 
   public postComment(){
 
-    if(!this.captchaStatus){
-        this.toastrService.error('Captcha is invalid!', 'Error');
+    if(this.isRequestPending){
       return;
     }
+
+    this.isRequestPending = true;
 
     this.comment.commentText = this.commentFormGroup.controls['commentText'].value;
     this.user.email = this.commentFormGroup.controls['email'].value;
@@ -83,7 +88,10 @@ export class CommentAddComponent implements OnInit {
     }   
     
     this.commentsHttpService.postComment(this.comment, this.uploadedFile).pipe()
-      .subscribe(data => this.commentEventService.commentsLoadInvoked.next());
+      .subscribe(data => {
+        this.commentEventService.commentsLoadInvoked.next();
+        this.isRequestPending = false;
+      });
   }
 
   public setSelectedFile(files: FileList){
@@ -95,7 +103,7 @@ export class CommentAddComponent implements OnInit {
   }
 
   public isActivePostButton(){
-    return this.commentFormGroup.invalid;
+    return this.commentFormGroup.invalid || !this.captchaStatus;
   }
 
   public addTagOnSelectedText(tag: string)

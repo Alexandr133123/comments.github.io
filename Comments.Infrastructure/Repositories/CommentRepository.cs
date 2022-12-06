@@ -25,6 +25,7 @@ namespace Comments.Infrastructure.Repositories
                 .BuildCommentAnswersTree(context.Comments
                 .Include(c => c.User)
                 .Include(c => c.Files)
+                .AsNoTracking()
                 .ToList());
 
             return result;

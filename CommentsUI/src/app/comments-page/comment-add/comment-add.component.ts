@@ -89,7 +89,6 @@ export class CommentAddComponent implements OnInit {
     
     this.commentsHttpService.postComment(this.comment, this.uploadedFile).pipe()
       .subscribe(data => {
-        this.commentEventService.commentsLoadInvoked.next();
         this.isRequestPending = false;
       });
   }

@@ -31,22 +31,19 @@ namespace Comments.Core.Services
         public CommentsResponseDTO GetComments(int pageNumber)
         {
             List<CommentDTO> commentsDTO = mapper.Map<List<CommentDTO>>(commentRepository.GetComments(pageNumber));       
-            
-            CommentsResponseDTO responseDTO = new CommentsResponseDTO();
-
+                        
             int pageSize = (int)CommentsPagination.PageSize;
 
-            responseDTO.TotalCount = commentsDTO.Count;
-            responseDTO.Comments = commentsDTO
+            int totalCount = commentsDTO.Count;
+            commentsDTO = commentsDTO
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)
-                .OrderByDescending(c => c.CommentId)
                 .ToList();
 
-            return responseDTO;
+            return new CommentsResponseDTO() { Comments = commentsDTO, TotalCount = totalCount};
         }
 
-        public void WriteComment(CommentDTO commentDTO, List<IFormFile> uploadedFiles)
+        public CommentDTO WriteComment(CommentDTO commentDTO, List<IFormFile> uploadedFiles)
         {
             int? userId = userService.GetUserIdByEmail(commentDTO.User.Email);
 
@@ -68,6 +65,8 @@ namespace Comments.Core.Services
             }
 
             commentRepository.WriteComment(comment);
+
+            return mapper.Map<CommentDTO>(comment);
         }
     }
 }

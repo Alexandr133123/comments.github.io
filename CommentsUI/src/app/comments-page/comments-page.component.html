@@ -6,6 +6,7 @@
         #paginator
         [pageSizeOptions]="pageSizeOptions"
         (page)="paginatorEvent = $event; loadComments()"
-        aria-label="Select page">
+        aria-label="Select page"
+        [disabled]="isRequestPending">
     </mat-paginator>
 </div>

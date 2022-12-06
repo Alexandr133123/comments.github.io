@@ -7,7 +7,7 @@ namespace Comments.Core.Interfaces.IService
     public interface ICommentService
     {
         CommentsResponseDTO GetComments(int pageNumber);
-        void WriteComment(CommentDTO comment, List<IFormFile> uploadedFiles);
+        CommentDTO WriteComment(CommentDTO comment, List<IFormFile> uploadedFiles);
 
     }
 }

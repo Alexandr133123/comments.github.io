@@ -1,9 +1,11 @@
 ﻿
 using AutoMapper;
+using Comments.API.Hubs;
 using Comments.API.ViewModels;
 using Comments.Core.DTOs;
 using Comments.Core.Interfaces.IService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Comments.API.Controllers
 {
@@ -13,18 +15,20 @@ namespace Comments.API.Controllers
     {
         private readonly ICommentService commentService;
         private readonly IMapper mapper;
+        private readonly IHubContext<CommentsHub> commentsHub;
 
-        public CommentsController (ICommentService commentService, IMapper mapper)
+        public CommentsController (ICommentService commentService, IMapper mapper, IHubContext<CommentsHub> commentsHub)
         {
             this.commentService = commentService;
             this.mapper = mapper;
+            this.commentsHub = commentsHub;
         }
 
         [HttpGet]
         [Route("GetComments")]
         public IActionResult GetComments([FromQuery] int pageNumber)
         {
-            CommentsResponse commentsResponse = mapper.Map<CommentsResponse>(commentService.GetComments(pageNumber));
+            CommentsResponseDTO commentsResponse = commentService.GetComments(pageNumber);
 
             return Ok(commentsResponse);
         }
@@ -38,7 +42,9 @@ namespace Comments.API.Controllers
 
             try
             {
-                commentService.WriteComment(mapper.Map<CommentDTO>(comment), uploadedFiles);
+                comment = mapper.Map<CommentViewModel>(commentService.WriteComment(mapper.Map<CommentDTO>(comment), uploadedFiles));
+
+                commentsHub.Clients.All.SendAsync("updateComments", comment);
             }
             catch
             {

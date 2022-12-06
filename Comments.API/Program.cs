@@ -6,6 +6,7 @@ using Comments.Core.Services;
 using Comments.Infrastructure.Repositories;
 using Comments.Infrastructure.SqlScripts;
 using Comments.Core.Managers;
+using Comments.API.Hubs;
 
 namespace Comments.API
 {
@@ -33,12 +34,16 @@ namespace Comments.API
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSignalR();
 
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+                    policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
                 });
             });
 
@@ -51,11 +56,16 @@ namespace Comments.API
 
             }
 
+            app.UseRouting();
+
             app.UseAuthorization();
             app.UseCors();
-        
 
-            app.MapControllers();
+            app.UseEndpoints(options =>
+            {
+                options.MapControllers();
+                options.MapHub<CommentsHub>("/hub/comments");
+            });
 
             app.Run();
         }

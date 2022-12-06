@@ -12,7 +12,7 @@ namespace Comments.Infrastructure.SqlScripts
         {
 
             List<IGrouping<int?, Comment>> groupedComments = comments.OrderBy(i => i.CommentId).GroupBy(i => i.HeadCommentId).ToList();
-            List<Comment> headComments = groupedComments.FirstOrDefault(g => g.Key == null).OrderBy(headComment => headComment.CommentId).ToList();
+            List<Comment> headComments = groupedComments.FirstOrDefault(g => g.Key == null).OrderByDescending(headComment => headComment.CommentId).ToList();
 
             if (headComments.Count > 0)
             {

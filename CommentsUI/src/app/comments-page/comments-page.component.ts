@@ -15,6 +15,7 @@ import { CommentsPagination } from "./enums/CommentsPagination.enum";
 
 export class CommentsPageComponent implements OnInit, OnDestroy, AfterViewInit {
     public comments?: Comment[];
+    public isRequestPending: boolean = false;
 
     public paginatorEvent: PageEvent;
     public pageSizeOptions: number[] = [CommentsPagination.pageSize];
@@ -39,11 +40,14 @@ export class CommentsPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public loadComments(){
 
+        this.isRequestPending = true;
+
         const pageNumber = this.paginator?.pageIndex;
 
         this.commentsHttpService.getComments(pageNumber).pipe().subscribe((data: CommentsResponse) => {
             this.comments = data.comments;
             this.paginator.length = data.totalCount;
+            this.isRequestPending = false;
         });
     }
 }
